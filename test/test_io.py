@@ -14,8 +14,6 @@ def test_io():
 
     except FileNotFoundError as e:
         print(f"文件未找到")
-    except Exception as e:
-        print(f"发生错误")
 
 if __name__ == "__main__":
     test_io()

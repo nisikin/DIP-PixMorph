@@ -19,7 +19,7 @@ src/basic/
 ├── __init__.py
 ├── io.py              # 图像读取与保存
 ├── grayscale.py       # 灰度化
-├── binarization.py    # 二值化
+├── binarize.py        # 二值化
 ├── filtering.py       # 平滑和锐化
 ├── histogram.py       # 直方图均衡与可视化
 ├── geometry.py        # 几何变换（旋转、缩放等）

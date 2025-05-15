@@ -1,26 +1,15 @@
-from src.basic.grayscale import image_grayscale
+import os
 from src.basic.io import load_image, save_image
+from src.basic.grayscale import to_grayscale
 
-def test_grayscale():
-    try:
-        # 加载图像
-        print(f"正在加载图像...")
-        img = load_image("../assets/test.jpg")
+def test_to_grayscale():
+    input_path = os.path.join("../assets", "test.jpg")
+    output_path = os.path.join("../assets", "test_gray.jpg")
 
-        # 图像灰度化
-        img = image_grayscale(img)
-        print(f"图像灰度化成功...")
-
-        # 保存图像为 BMP 格式
-        print(f"正在保存图像...")
-        save_image(img, "../assets/test.bmp")
-
-        print(f"图像加载并保存成功...")
-
-    except FileNotFoundError as e:
-        print(f"文件未找到")
-    except Exception as e:
-        print(f"发生错误")
+    img = load_image(input_path)
+    gray = to_grayscale(img)
+    save_image(gray, output_path)
+    print("灰度化测试完成，输出路径：", output_path)
 
 if __name__ == "__main__":
-    test_grayscale()
+    test_to_grayscale()
