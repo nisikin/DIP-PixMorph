@@ -1,5 +1,5 @@
 from src.basic.io import load_image, save_image
-from src.basic.filtering import ideal_low_pass_filter,butterworth_low_pass_filter,gaussian_low_pass_filter,mean_filter,median_filter
+from src.basic.filtering import *
 
 if __name__ == "__main__":
 
@@ -13,8 +13,25 @@ if __name__ == "__main__":
     butter_img = butterworth_low_pass_filter(img, cutoff=30, order=2)
     gauss_img = gaussian_low_pass_filter(img, cutoff=30)
 
-    save_image(mean_img, "../assets/mean_img.jpg")
-    save_image(median_img, "../assets/median_img.jpg")
-    save_image(ideal_img, "../assets/ideal_img.jpg")
-    save_image(butter_img, "../assets/butter_img.jpg")
-    save_image(gauss_img, "../assets/gauss_img.jpg")
+    save_image(mean_img, "../assets/mean_filter.jpg")
+    save_image(median_img, "../assets/median_filter.jpg")
+    save_image(ideal_img, "../assets/ideal_low_pass_img.jpg")
+    save_image(butter_img, "../assets/butter_smoothing.jpg")
+    save_image(gauss_img, "../assets/gauss_smoothing.jpg")
+
+    roberts_img = roberts_sharpen(img)
+    sobel_img = sobel_sharpen(img)
+    prewitt_img = prewitt_sharpen(img)
+    laplacian_img = laplacian_sharpen(img)
+    ideal_high_pass_img = ideal_high_pass_filter(img, cutoff=30)
+    butter_img = butterworth_high_pass_filter(img, cutoff=30, order=2)
+    gauss_img = gaussian_high_pass_filter(img, cutoff=30)
+
+    save_image(roberts_img, "../assets/roberts_sharpen.jpg")
+    save_image(sobel_img, "../assets/sobel_sharpen.jpg")
+    save_image(prewitt_img, "../assets/prewitt_sharpen.jpg")
+    save_image(laplacian_img, "../assets/laplacian_sharpen.jpg")
+    save_image(ideal_high_pass_img, "../assets/ideal_high_pass_img.jpg")
+    save_image(butter_img, "../assets/butter_sharpen.jpg")
+    save_image(gauss_img, "../assets/gauss_sharpen.jpg")
+
