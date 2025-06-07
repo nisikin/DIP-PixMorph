@@ -6,6 +6,7 @@ if __name__ == "__main__":
 
     img = load_image("../assets/test.jpg")
 
+
     mean_img = mean_filter(img)
     median_img = median_filter(img)
     ideal_img = ideal_low_pass_filter(img, cutoff=30)

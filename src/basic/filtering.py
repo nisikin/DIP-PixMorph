@@ -7,6 +7,7 @@ import numpy as np
 频域的平滑是将图像通过傅里叶变换转换到频域，然后对频率成分进行操作，再反变换回图像空间，包括理想_低通滤波，巴特沃斯低通滤波和高斯低通滤波。
 """
 
+
 def mean_filter(image: np.ndarray, kernel_size: int = 3) -> np.ndarray:
     """均值滤波"""
     return cv2.blur(image, (kernel_size, kernel_size))
