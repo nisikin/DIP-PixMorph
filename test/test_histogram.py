@@ -7,20 +7,20 @@ if __name__ == "__main__":
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     # 对数变换
-    transform_gray_img = log_transform(img,0)
-    transform_color_img = log_transform(img,1)
+    transform_gray_img = log_transform(img,1)
+    transform_color_img = log_transform(img,0)
 
     # 灰度图均衡
-    equalized_gray = equalize_gray_histogram(img)
+    equalized_gray = equalize_histogram(img,1)
 
     # 彩色图均衡
-    equalized_color = equalize_color_histogram(img)
+    equalized_color = equalize_histogram(img,0)
 
     # 正规化
     norm_img = histogram_normalization(img)
 
     # 显示结果
-    cv2.imshow("Original Gray", img_gray)
+    """cv2.imshow("Original Gray", img_gray)
     cv2.imshow("transformed Gray", transform_gray_img)
     cv2.imshow("Equalized Gray", equalized_gray)
     cv2.imshow("Original Color", img)
@@ -36,6 +36,9 @@ if __name__ == "__main__":
     plot_histogram(transform_color_img, "transformed Color")
     plot_histogram(equalized_color, "Equalized Color")
     plot_histogram(norm_img, "Normal Image")
+    """
+    img = plot_histogram(img)
+    save_image(img, "../assets/histogram.jpg")
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()

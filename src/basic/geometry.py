@@ -7,7 +7,7 @@ def resize_image(img, scale_x=1.0, scale_y=1.0, interpolation=cv2.INTER_LINEAR):
     图像缩放
     :param scale_x: x方向缩放因子
     :param scale_y: y方向缩放因子
-    :param interpolation: 插值方法
+    :param interpolation:
     """
     return cv2.resize(img, None, fx=scale_x, fy=scale_y, interpolation=interpolation)
 
