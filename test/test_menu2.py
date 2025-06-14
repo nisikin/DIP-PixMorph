@@ -324,7 +324,7 @@ class ImageConverterApp(QMainWindow):
             if channels == 4:
                 np_array = np_array[:, :, :3]
             bytes_per_line = 3 * width
-            qimage = QImage(np_array.data, width, height, bytes_per_line, QImage.Format_RGB888)
+            qimage = QImage(np_array.data.tobytes(), width, height, bytes_per_line, QImage.Format_RGB888)
             return qimage.copy()
 
         raise ValueError("不支持的图像格式")
