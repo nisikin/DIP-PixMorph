@@ -13,7 +13,7 @@ from src.basic.filtering import *
 from src.basic.geometry import *
 from src.basic.grayscale import *
 from src.basic.histogram import *
-
+from src.style_transfer.neural_style.run import *
 
 
 class ImageConverterApp(QMainWindow):
@@ -40,7 +40,8 @@ class ImageConverterApp(QMainWindow):
             "绘制直方图": ["绘制直方图"],
             "直方图均衡化": ["对数变换","均衡化","正规化"],
             "几何变换": ["图像缩放","图像旋转","图像平移","图像翻转","仿射变换"],
-            "边缘检测": ["Roberts算子边缘检测","Prewitt算子边缘检测","Sobel算子边缘检测","Laplacian算子边缘检测","LoG边缘检测","Canny边缘检测","霍夫变换直线检测"]
+            "边缘检测": ["Roberts算子边缘检测","Prewitt算子边缘检测","Sobel算子边缘检测","Laplacian算子边缘检测","LoG边缘检测","Canny边缘检测","霍夫变换直线检测"],
+            "风格迁移": ["1","2","3","4"]
         }
         """初始化用户界面"""
         # 创建主窗口部件
@@ -174,7 +175,7 @@ class ImageConverterApp(QMainWindow):
         if effect == "原始图片":
             processed_img = img
         elif effect == "灰度化":
-            processed_img = to_grayscale(img)
+            processed_img = grayscale_image(img)
         elif effect == "二值化":
             processed_img = binarize_image(img,127,0)
         elif effect == "反二值化":
@@ -237,6 +238,14 @@ class ImageConverterApp(QMainWindow):
             processed_img = canny_edge(img)
         elif effect == "霍夫变换直线检测":
             processed_img = hough_lines(img, use_probabilistic=True)
+        elif effect == "1":
+            processed_img = run_style_transfer(img,"../src/style_transfer/saved_models/candy.pth",content_scale=None, device="cpu")
+        elif effect == "2":
+            processed_img = run_style_transfer(img,"../src/style_transfer/saved_models/mosaic.pth")
+        elif effect == "3":
+            processed_img = run_style_transfer(img,"../src/style_transfer/saved_models/rain_princess.pth")
+        elif effect == "4":
+            processed_img = run_style_transfer(img,"../src/style_transfer/saved_models/udnie.pth")
         else:
             processed_img = img
 

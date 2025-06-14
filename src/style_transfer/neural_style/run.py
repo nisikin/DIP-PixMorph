@@ -6,7 +6,7 @@ from torchvision import transforms
 from .transformer_net import TransformerNet
 from . import utils
 
-def run_style_transfer(content_image_path, model_path, output_image_path, content_scale=None, device="cpu"):
+def run_style_transfer(content_image_path, model_path, content_scale=None, device="cpu"):
     """
     对输入图像执行风格迁移。
 
@@ -42,6 +42,10 @@ def run_style_transfer(content_image_path, model_path, output_image_path, conten
 
         # 推理并保存图像
         output = model(content_tensor).cpu()
-        utils.save_image(output_image_path, output[0])
+        #utils.save_image(output_image_path, output[0])
 
-    return output
+        # 改为numpy类型
+        output_image = output.clone().clamp(0, 255).detach().numpy()
+        output_image = output_image.transpose(1, 2, 0).astype('uint8')
+
+    return output_image
