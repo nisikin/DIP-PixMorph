@@ -3,7 +3,6 @@ from src.basic.filtering import *
 
 if __name__ == "__main__":
 
-
     img = load_image("../assets/test.jpg")
 
 
