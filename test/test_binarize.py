@@ -8,8 +8,8 @@ def test_binarize_image():
     output_inv = os.path.join("../assets", "test_binary_inv.jpg")
 
     img = load_image(input_path)
-    binary, binary_inv = binarize_image(img)
-
+    binary = binarize_image(img)
+    binary_inv = binarize_image(img,127,1)
     save_image(binary, output_bin)
     save_image(binary_inv, output_inv)
     print("二值化测试成功")
