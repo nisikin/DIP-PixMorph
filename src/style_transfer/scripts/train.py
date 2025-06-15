@@ -6,14 +6,14 @@ def run_neural_style_train(dataset, style_image, save_model_dir,
                            epochs=10, batch_size=4, image_size=256, accel=True):
     python_executable = sys.executable
 
-    # 转成绝对路径，确保路径准确
+    # 绝对路径
     dataset = os.path.abspath(dataset)
     style_image = os.path.abspath(style_image)
     save_model_dir = os.path.abspath(save_model_dir)
 
     cmd = [
         python_executable,
-        os.path.abspath("../neural_style/neural_style.py"),  # 同样用绝对路径
+        os.path.abspath("../neural_style/neural_style.py"),
         "train",
         "--dataset", dataset,
         "--style-image", style_image,
@@ -36,5 +36,5 @@ if __name__ == "__main__":
         epochs=10,
         batch_size=4,
         image_size=256,
-        accel=False  # 设置为 False 则不传 --accel 参数
+        accel=True  # 设置为 False 则不传 --accel 参数
     )
