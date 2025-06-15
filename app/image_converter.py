@@ -16,6 +16,7 @@ from PyQt5.QtWidgets import (
     QGroupBox,
     QMessageBox,
 )
+from torch.cuda import device
 
 # 导入图像处理模块
 from src.basic.binarize import *
@@ -277,7 +278,7 @@ class ImageConverterApp(QMainWindow):
         elif effect == "霍夫变换直线检测":
             processed_img = hough_lines(img, use_probabilistic=True)
         elif effect == "1":
-            processed_img = run_style_transfer(img,"../src/style_transfer/saved_models/candy.pth",content_scale=None, device="cpu")
+            processed_img = run_style_transfer(img,"../src/style_transfer/saved_models/candy.pth")
         elif effect == "2":
             processed_img = run_style_transfer(img,"../src/style_transfer/saved_models/mosaic.pth")
         elif effect == "3":
