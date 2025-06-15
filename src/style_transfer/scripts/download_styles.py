@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm
 import time
 
-def download_wallpapers(keyword="your name", save_dir="../data/style-images", max_pages=3, delay=2):
+def download_wallpapers(keyword="your name", save_dir="../data/style-images", max_pages=10, delay=2):
     base_url = "https://wallhaven.cc"
 
     search_url = f"{base_url}/search?q={keyword.replace(' ', '%20')}&categories=111&purity=100&atleast=1920x1080&sorting=relevance"

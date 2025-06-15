@@ -15,6 +15,7 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QGroupBox,
     QMessageBox,
+    QDesktopWidget
 )
 from torch.cuda import device
 
@@ -37,7 +38,11 @@ class ImageConverterApp(QMainWindow):
         self.processed_image = None  # 处理后的图片
         self.initUI()
         self.setWindowTitle("图片转换工具")  # 设置窗口标题
-        self.setGeometry(100, 100, 900, 600)  # 设置窗口位置和大小
+        screen = QDesktopWidget().availableGeometry()
+        width, height = 1200, 800
+        x = (screen.width() - width) // 2
+        y = (screen.height() - height) // 2
+        self.setGeometry(x, y, width, height)
 
     def initUI(self):
         """初始化用户界面"""
