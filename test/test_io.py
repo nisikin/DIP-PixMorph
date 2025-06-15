@@ -8,7 +8,7 @@ def test_io():
 
         # 保存图像为 BMP 格式
         print(f"正在保存图像...")
-        save_image(img, "../assets/test.bmp")
+        save_image(img, "../assets/output/test.bmp")
 
         print(f"图像加载并保存成功...")
 

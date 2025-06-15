@@ -21,9 +21,9 @@ if __name__ == "__main__":
     dst_tri = np.float32([[10, 100], [200, 50], [100, 250]])
     affine = affine_transform(img, src_tri, dst_tri)
 
-    save_image(rotated, "../assets/rotated.bmp")
-    save_image(resized, "../assets/resized.bmp")
-    save_image(translated, "../assets/translated.bmp")
-    save_image(flipped, "../assets/flipped.bmp")
-    save_image(affine, "../assets/affine.bmp")
+    save_image(rotated, "../assets/output/rotated.bmp")
+    save_image(resized, "../assets/output/resized.bmp")
+    save_image(translated, "../assets/output/translated.bmp")
+    save_image(flipped, "../assets/output/flipped.bmp")
+    save_image(affine, "../assets/output/affine.bmp")
 

@@ -38,7 +38,7 @@ if __name__ == "__main__":
     plot_histogram(norm_img, "Normal Image")
     """
     img = plot_histogram(img)
-    save_image(img, "../assets/histogram.jpg")
+    save_image(img, "../assets/output/histogram.jpg")
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()
