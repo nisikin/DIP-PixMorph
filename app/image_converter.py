@@ -1,7 +1,7 @@
 import os
 import sys
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt,QThread, pyqtSignal
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import (
     QApplication,
@@ -18,8 +18,6 @@ from PyQt5.QtWidgets import (
     QDesktopWidget,
     QLineEdit,
 )
-from torch.cuda import device
-
 # 导入图像处理模块
 from src.basic.binarize import *
 from src.basic.edge_detection import *
@@ -27,12 +25,11 @@ from src.basic.filtering import *
 from src.basic.geometry import *
 from src.basic.grayscale import *
 from src.basic.histogram import *
-from src.style_transfer.neural_style.run import *
 from src.basic.salt_pepper_noise import *
 from src.basic.morph_ops import *
 
-
-
+from src.style_transfer.neural_style.run import *
+from src.pixel.convert import *
 
 class ImageConverterApp(QMainWindow):
 
@@ -50,7 +47,6 @@ class ImageConverterApp(QMainWindow):
         x = (screen.width() - width) // 2
         y = (screen.height() - height) // 2
         self.setGeometry(x, y, width, height)
-
 
     def initUI(self, control_layout=None):
         """初始化用户界面"""
@@ -89,7 +85,8 @@ class ImageConverterApp(QMainWindow):
             ],
             "椒盐噪声":["添加椒盐噪声"],
             "图像形态学操作":["腐蚀","膨胀","开运算","闭运算"],
-            "风格迁移": ["1", "2", "3", "4"],
+            "风格迁移": ["糖果", "马赛克", "雨中公主", "Udine","test"],
+            "像素凤转换":["pixel"],
         }
 
         # 创建主窗口部件
@@ -138,9 +135,7 @@ class ImageConverterApp(QMainWindow):
         self.param2_input.setPlaceholderText("参数2")
         self.param2_input.setFixedSize(40, 25)
 
-        param_layout.addWidget(QLabel("参数1："))
         param_layout.addWidget(self.param1_input)
-        param_layout.addWidget(QLabel("参数2："))
         param_layout.addWidget(self.param2_input)
 
         # 将参数输入框加入顶部控制区域
@@ -163,6 +158,7 @@ class ImageConverterApp(QMainWindow):
 
         # 原始图片显示
         original_group = QGroupBox("原始图片")
+        original_group.setStyleSheet("QGroupBox { font-size: 18px; }")
         original_layout = QVBoxLayout()
         self.original_label = QLabel()
         self.original_label.setAlignment(Qt.AlignCenter)
@@ -181,6 +177,7 @@ class ImageConverterApp(QMainWindow):
 
         # 处理后的图片显示
         processed_group = QGroupBox("转换结果")
+        processed_group.setStyleSheet("QGroupBox { font-size: 18px; }")
         processed_layout = QVBoxLayout()
         self.processed_label = QLabel()
         self.processed_label.setAlignment(Qt.AlignCenter)
@@ -258,6 +255,7 @@ class ImageConverterApp(QMainWindow):
         effect = self.detail_combo.currentText()
         val1 = self.get_input_params1()
         val2 = self.get_input_params2()
+
         # 将QImage转换为numpy数组进行处理
         img = self.qimage_to_numpy(self.original_image)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -367,7 +365,10 @@ class ImageConverterApp(QMainWindow):
         elif effect == "霍夫变换直线检测":
             processed_img = hough_lines(img, use_probabilistic=True)
         elif effect == "添加椒盐噪声":
-            processed_img = add_salt_pepper_noise(img)
+            if val1 is None:
+                processed_img = add_salt_pepper_noise(img)
+            else:
+                processed_img = add_salt_pepper_noise(img,val1)
         elif effect == "腐蚀":
             processed_img = erode_image(img)
         elif effect == "膨胀":
@@ -376,19 +377,23 @@ class ImageConverterApp(QMainWindow):
             processed_img = open_image(img)
         elif effect == "闭运算":
             processed_img = close_image(img)
-        elif effect == "1":
-            processed_img = run_style_transfer(img,"../src/style_transfer/saved_models/candy.pth")
-        elif effect == "2":
-            processed_img = run_style_transfer(img,"../src/style_transfer/saved_models/mosaic.pth")
-        elif effect == "3":
-            processed_img = run_style_transfer(img,"../src/style_transfer/saved_models/rain_princess.pth")
-        elif effect == "4":
-            processed_img = run_style_transfer(img,"../src/style_transfer/saved_models/udnie.pth")
+        elif effect == "糖果":
+            processed_img = run_style_transfer(img, "../src/style_transfer/models/candy.pth")
+        elif effect == "马赛克":
+            processed_img = run_style_transfer(img, "../src/style_transfer/models/mosaic.pth")
+        elif effect == "雨中公主":
+            processed_img = run_style_transfer(img, "../src/style_transfer/models/rain_princess.pth")
+        elif effect == "Udine":
+            processed_img = run_style_transfer(img, "../src/style_transfer/models/udnie.pth")
+        elif effect == "test":
+            processed_img = run_style_transfer(img,"../src/style_transfer/models/epoch_10_Sun_Jun_15_17:07:18_2025_100000.0_10000000000.0.model")
+        elif effect == "pixel":
+            processed_img = convert_to_pixel(img)
         else:
             processed_img = img
 
         # 将处理后的numpy数组转换回QImage
-        self.processed_image = self.numpy_to_qimage(processed_img)
+        self.processed_image = self.numpy_to_qimage(np.array(processed_img))
 
         # 显示处理后的图片
         pixmap = QPixmap.fromImage(self.processed_image)
@@ -459,7 +464,7 @@ class ImageConverterApp(QMainWindow):
 
         # 获取原始数据
         ptr = qimage.bits()
-        ptr.setsize(height * width * 4)  # 4 bytes per pixel (RGBA)
+        ptr.setsize(height * width * 4)  # 4 bytes per photo2pixel (RGBA)
 
         # 创建numpy数组
         arr = np.frombuffer(ptr, np.uint8).reshape((height, width, 4))
@@ -491,6 +496,7 @@ class ImageConverterApp(QMainWindow):
             return qimage.copy()
 
         raise ValueError("不支持的图像格式")
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

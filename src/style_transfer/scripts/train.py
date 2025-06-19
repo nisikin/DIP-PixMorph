@@ -36,10 +36,10 @@ def run_neural_style_train(dataset, style_image, save_model_dir,
 if __name__ == "__main__":
     run_neural_style_train(
         dataset="../data",
-        style_image="../data/style-images/yourname_0.jpg",
-        save_model_dir="../saved_models/",
+        style_image="../data/style-images2/disco_0.jpg",
+        save_model_dir="../models/",
         epochs=10,
         batch_size=1,     # 减小 batch_size
         image_size=128,   # 减小图片尺寸
-        accel=False       # 取消硬件加速，防止意外错误
+        accel=True
     )

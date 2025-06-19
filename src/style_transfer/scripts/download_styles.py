@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm
 import time
 
-def download_wallpapers(keyword="your name", save_dir="../data/style-images", max_pages=10, delay=2):
+def download_wallpapers(keyword="disco elysium", save_dir="../data/style-images2", max_pages=3, delay=1):
     base_url = "https://wallhaven.cc"
 
     search_url = f"{base_url}/search?q={keyword.replace(' ', '%20')}&categories=111&purity=100&atleast=1920x1080&sorting=relevance"
@@ -17,7 +17,7 @@ def download_wallpapers(keyword="your name", save_dir="../data/style-images", ma
 
     img_count = 0
     for page in range(1, max_pages + 1):
-        print(f"🌸 正在抓取第 {page} 页壁纸...")
+        print(f"正在抓取第 {page} 页壁纸...")
         resp = requests.get(search_url + f"&page={page}", headers=headers)
         soup = BeautifulSoup(resp.text, "html.parser")
 
@@ -31,12 +31,12 @@ def download_wallpapers(keyword="your name", save_dir="../data/style-images", ma
             if img_tag:
                 img_url = img_tag["src"]
                 ext = os.path.splitext(img_url)[1]
-                save_path = os.path.join(save_dir, f"yourname_{img_count}{ext}")
+                save_path = os.path.join(save_dir, f"disco_{img_count}{ext}")
 
                 img_data = requests.get(img_url, headers=headers).content
                 with open(save_path, "wb") as f:
                     f.write(img_data)
-                print(f"✅ 下载: {save_path}")
+                print(f"下载: {save_path}")
                 img_count += 1
 
                 time.sleep(delay)

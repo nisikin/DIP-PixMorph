@@ -239,13 +239,13 @@ class ImageConverterApp(QMainWindow):
         elif effect == "霍夫变换直线检测":
             processed_img = hough_lines(img, use_probabilistic=True)
         elif effect == "1":
-            processed_img = run_style_transfer(img,"../src/style_transfer/saved_models/candy.pth",content_scale=None, device="cpu")
+            processed_img = run_style_transfer(img, "../src/style_transfer/models/candy.pth", content_scale=None, device="cpu")
         elif effect == "2":
-            processed_img = run_style_transfer(img,"../src/style_transfer/saved_models/mosaic.pth")
+            processed_img = run_style_transfer(img, "../src/style_transfer/models/mosaic.pth")
         elif effect == "3":
-            processed_img = run_style_transfer(img,"../src/style_transfer/saved_models/rain_princess.pth")
+            processed_img = run_style_transfer(img, "../src/style_transfer/models/rain_princess.pth")
         elif effect == "4":
-            processed_img = run_style_transfer(img,"../src/style_transfer/saved_models/udnie.pth")
+            processed_img = run_style_transfer(img, "../src/style_transfer/models/udnie.pth")
         else:
             processed_img = img
 
@@ -296,7 +296,7 @@ class ImageConverterApp(QMainWindow):
 
         # 获取原始数据
         ptr = qimage.bits()
-        ptr.setsize(height * width * 4)  # 4 bytes per pixel (RGBA)
+        ptr.setsize(height * width * 4)  # 4 bytes per photo2pixel (RGBA)
 
         # 创建numpy数组
         arr = np.frombuffer(ptr, np.uint8).reshape((height, width, 4))

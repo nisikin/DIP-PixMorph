@@ -7,7 +7,7 @@ if __name__ == "__main__":
     content_image = Image.open("../assets/test.jpg")
 
     # 2. 模型路径
-    model_path = "../src/style_transfer/saved_models/udnie.pth"
+    model_path = "../src/style_transfer/models/epoch_10_20250619_155240_100000.0_10000000000.0.model"
 
     # 3. 执行风格迁移
     output_image = run_style_transfer(
