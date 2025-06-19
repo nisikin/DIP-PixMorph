@@ -1,15 +1,20 @@
 import subprocess
 import sys
 import os
+from PIL import Image
+Image.MAX_IMAGE_PIXELS = None  # 关闭像素限制警告
 
 def run_neural_style_train(dataset, style_image, save_model_dir,
-                           epochs=10, batch_size=4, image_size=256, accel=True):
+                           epochs=10, batch_size=1, image_size=128, accel=True):
     python_executable = sys.executable
 
     # 绝对路径
     dataset = os.path.abspath(dataset)
     style_image = os.path.abspath(style_image)
     save_model_dir = os.path.abspath(save_model_dir)
+
+    # 打印提示，提醒用户注意内存
+    print(f"注意：已设置 image_size={image_size} 和 batch_size={batch_size}，以避免内存不足问题。")
 
     cmd = [
         python_executable,
@@ -31,10 +36,10 @@ def run_neural_style_train(dataset, style_image, save_model_dir,
 if __name__ == "__main__":
     run_neural_style_train(
         dataset="../data",
-        style_image="../data/style-images/yourname_0.png",
+        style_image="../data/style-images/yourname_0.jpg",
         save_model_dir="../saved_models/",
         epochs=10,
-        batch_size=4,
-        image_size=256,
-        accel=True  # 设置为 False 则不传 --accel 参数
+        batch_size=1,     # 减小 batch_size
+        image_size=128,   # 减小图片尺寸
+        accel=False       # 取消硬件加速，防止意外错误
     )

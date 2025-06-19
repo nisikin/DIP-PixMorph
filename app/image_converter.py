@@ -15,7 +15,8 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QGroupBox,
     QMessageBox,
-    QDesktopWidget
+    QDesktopWidget,
+    QLineEdit,
 )
 from torch.cuda import device
 
@@ -27,8 +28,14 @@ from src.basic.geometry import *
 from src.basic.grayscale import *
 from src.basic.histogram import *
 from src.style_transfer.neural_style.run import *
+from src.basic.salt_pepper_noise import *
+from src.basic.morph_ops import *
+
+
+
 
 class ImageConverterApp(QMainWindow):
+
     """图片转换工具的主窗口类，基于PyQt5实现图像处理GUI"""
 
     def __init__(self):
@@ -39,16 +46,18 @@ class ImageConverterApp(QMainWindow):
         self.initUI()
         self.setWindowTitle("图片转换工具")  # 设置窗口标题
         screen = QDesktopWidget().availableGeometry()
-        width, height = 1200, 800
+        width, height = 1600, 900
         x = (screen.width() - width) // 2
         y = (screen.height() - height) // 2
         self.setGeometry(x, y, width, height)
 
-    def initUI(self):
+
+    def initUI(self, control_layout=None):
         """初始化用户界面"""
         # 定义效果选项字典，包含各种图像处理类别及其子选项
         self.effect_options = {
-            "灰度化": ["灰度化"],
+            "原始图片":["原始图片"],
+            "灰度化": ["灰度化转换"],
             "二值化": ["二值化", "反二值化"],
             "图像平滑": [
                 "均值滤波",
@@ -68,7 +77,7 @@ class ImageConverterApp(QMainWindow):
             ],
             "绘制直方图": ["绘制直方图"],
             "直方图均衡化": ["对数变换", "均衡化", "正规化"],
-            "几何变换": ["图像缩放", "图像旋转", "图像平移", "图像翻转", "仿射变换"],
+            "几何变换": ["图像缩放", "图像旋转", "图像平移", "图像垂直翻转","图像水平翻转","图像垂直水平翻转", "仿射变换"],
             "边缘检测": [
                 "Roberts算子边缘检测",
                 "Prewitt算子边缘检测",
@@ -78,6 +87,8 @@ class ImageConverterApp(QMainWindow):
                 "Canny边缘检测",
                 "霍夫变换直线检测",
             ],
+            "椒盐噪声":["添加椒盐噪声"],
+            "图像形态学操作":["腐蚀","膨胀","开运算","闭运算"],
             "风格迁移": ["1", "2", "3", "4"],
         }
 
@@ -89,6 +100,7 @@ class ImageConverterApp(QMainWindow):
         main_layout = QVBoxLayout()
 
         # 顶部控制区域
+        param_layout = QVBoxLayout()
         control_layout = QHBoxLayout()
 
         # 文件选择按钮
@@ -116,6 +128,24 @@ class ImageConverterApp(QMainWindow):
         effect_layout.addWidget(self.detail_combo)
         control_layout.addLayout(effect_layout)
 
+        # 输入框
+        self.param1_input = QLineEdit()
+        self.param1_input.setPlaceholderText("参数1")
+        self.param1_input.setFixedSize(40, 25)
+
+        # 输入框2
+        self.param2_input = QLineEdit()
+        self.param2_input.setPlaceholderText("参数2")
+        self.param2_input.setFixedSize(40, 25)
+
+        param_layout.addWidget(QLabel("参数1："))
+        param_layout.addWidget(self.param1_input)
+        param_layout.addWidget(QLabel("参数2："))
+        param_layout.addWidget(self.param2_input)
+
+        # 将参数输入框加入顶部控制区域
+        control_layout.addLayout(param_layout)
+
         # 处理按钮
         self.process_button = QPushButton("应用效果")
         self.process_button.setFixedHeight(50)
@@ -136,9 +166,16 @@ class ImageConverterApp(QMainWindow):
         original_layout = QVBoxLayout()
         self.original_label = QLabel()
         self.original_label.setAlignment(Qt.AlignCenter)
-        self.original_label.setMinimumSize(400, 400)
+        self.original_label.setMinimumSize(800, 800)
         self.original_label.setStyleSheet("border: 1px solid gray; background-color: #f0f0f0;")
         original_layout.addWidget(self.original_label)
+
+        # 分辨率标签（原图）
+        self.original_resolution_label = QLabel("分辨率：- × -")
+        self.original_resolution_label.setAlignment(Qt.AlignLeft)
+        self.original_resolution_label.setFixedHeight(15)
+        original_layout.addWidget(self.original_resolution_label)
+
         original_group.setLayout(original_layout)
         image_layout.addWidget(original_group)
 
@@ -147,9 +184,16 @@ class ImageConverterApp(QMainWindow):
         processed_layout = QVBoxLayout()
         self.processed_label = QLabel()
         self.processed_label.setAlignment(Qt.AlignCenter)
-        self.processed_label.setMinimumSize(400, 400)
+        self.processed_label.setMinimumSize(800, 800)
         self.processed_label.setStyleSheet("border: 1px solid gray; background-color: #f0f0f0;")
         processed_layout.addWidget(self.processed_label)
+
+        # 分辨率标签（处理后）
+        self.processed_resolution_label = QLabel("分辨率：- × -")
+        self.processed_resolution_label.setAlignment(Qt.AlignLeft)
+        self.processed_resolution_label.setFixedHeight(15)
+        processed_layout.addWidget(self.processed_resolution_label)
+
         processed_group.setLayout(processed_layout)
         image_layout.addWidget(processed_group)
 
@@ -199,6 +243,8 @@ class ImageConverterApp(QMainWindow):
                 )
                 self.processed_label.clear()
                 self.processed_label.setText("选择效果后点击应用按钮")
+                self.original_label.setPixmap(pixmap)
+                self.original_resolution_label.setText(f"分辨率：{pixmap.width()} × {pixmap.height()}")
             else:
                 QMessageBox.warning(self, "错误", "无法加载图片文件")
 
@@ -210,7 +256,8 @@ class ImageConverterApp(QMainWindow):
 
         # 获取选定的效果
         effect = self.detail_combo.currentText()
-
+        val1 = self.get_input_params1()
+        val2 = self.get_input_params2()
         # 将QImage转换为numpy数组进行处理
         img = self.qimage_to_numpy(self.original_image)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -218,22 +265,37 @@ class ImageConverterApp(QMainWindow):
         # 应用选定的效果
         if effect == "原始图片":
             processed_img = img
-        elif effect == "灰度化":
+        elif effect == "灰度化转换":
             processed_img = grayscale_image(img)
         elif effect == "二值化":
-            processed_img = binarize_image(img,127,0)
+            if val1 is None :
+                processed_img = binarize_image(img,127, 0)
+            else:
+                processed_img = binarize_image(img,val1,0)
         elif effect == "反二值化":
-            processed_img = binarize_image(img,127,1)
+            if val1 is None:
+                processed_img = binarize_image(img,127,1)
+            else:
+                processed_img = binarize_image(img, val1, 1)
         elif effect == "均值滤波":
             processed_img = mean_filter(img)
         elif effect == "中值滤波":
             processed_img = median_filter(img)
         elif effect == "理想低通滤波":
-            processed_img = ideal_low_pass_filter(img,cutoff=30)
+            if val1 is None:
+                processed_img = ideal_low_pass_filter(img,cutoff=30)
+            else:
+                processed_img = ideal_low_pass_filter(img,val1)
         elif effect == "巴特沃斯低通滤波":
-            processed_img = butterworth_low_pass_filter(img,cutoff=30,order=2)
+            if val1 is None or val2 is None:
+                processed_img = butterworth_low_pass_filter(img,cutoff=30,order=2)
+            else:
+                processed_img = butterworth_low_pass_filter(img,val1,val2)
         elif effect == "高斯低通滤波":
-            processed_img = gaussian_low_pass_filter(img,cutoff=30)
+            if val1 is None:
+                processed_img = gaussian_low_pass_filter(img,cutoff=30)
+            else:
+                processed_img = gaussian_low_pass_filter(img,val1)
         elif effect == "Roberts算子":
             processed_img = roberts_sharpen(img)
         elif effect == "Sobel算子":
@@ -243,11 +305,20 @@ class ImageConverterApp(QMainWindow):
         elif effect == "Laplacian算子":
             processed_img = laplacian_sharpen(img)
         elif effect == "理想高通滤波":
-            processed_img = ideal_high_pass_filter(img,cutoff=30)
+            if val1 is None:
+                processed_img = ideal_high_pass_filter(img,cutoff=30)
+            else:
+                processed_img = ideal_high_pass_filter(img,val1)
         elif effect == "巴特沃斯高通滤波":
-            processed_img = butterworth_high_pass_filter(img,cutoff=30,order=2)
+            if val1 is None or val2 is None:
+                processed_img = butterworth_high_pass_filter(img,cutoff=30,order=2)
+            else:
+                processed_img = butterworth_high_pass_filter(img,val1,val2)
         elif effect == "高斯高通滤波":
-            processed_img = gaussian_high_pass_filter(img,cutoff=30)
+            if val1 is None:
+                processed_img = gaussian_high_pass_filter(img,cutoff=30)
+            else:
+                processed_img = gaussian_high_pass_filter(img,val1)
         elif effect == "绘制直方图":
             processed_img = plot_histogram(img)
         elif effect == "对数变换":
@@ -257,13 +328,26 @@ class ImageConverterApp(QMainWindow):
         elif effect == "正规化":
             processed_img = histogram_normalization(img)
         elif effect == "图像缩放":
-            processed_img = resize_image(img, 0.5, 0.5)
+            if val1 is None or val2 is None:
+                processed_img = resize_image(img, 0.5, 0.5)
+            else:
+                processed_img = resize_image(img,val1,val2)
         elif effect == "图像旋转":
-            processed_img = rotate_image(img, 45)
+            if val1 is None:
+                processed_img = rotate_image(img, 45)
+            else:
+                processed_img = rotate_image(img, val1)
         elif effect == "图像平移":
-            processed_img = translate_image(img, 100, 50)
-        elif effect == "图像翻转":
+            if val1 is None or val2 is None:
+                processed_img = translate_image(img, 100, 50)
+            else:
+                processed_img = translate_image(img,val1,val2)
+        elif effect == "图像垂直翻转":
+            processed_img = flip_image(img, 0)
+        elif effect == "图像水平翻转":
             processed_img = flip_image(img, 1)
+        elif effect == "图像垂直水平翻转":
+            processed_img = flip_image(img, -1)
         elif effect == "仿射变换":
             src_tri = np.float32([[50, 50], [200, 50], [50, 200]])
             dst_tri = np.float32([[10, 100], [200, 50], [100, 250]])
@@ -282,6 +366,16 @@ class ImageConverterApp(QMainWindow):
             processed_img = canny_edge(img)
         elif effect == "霍夫变换直线检测":
             processed_img = hough_lines(img, use_probabilistic=True)
+        elif effect == "添加椒盐噪声":
+            processed_img = add_salt_pepper_noise(img)
+        elif effect == "腐蚀":
+            processed_img = erode_image(img)
+        elif effect == "膨胀":
+            processed_img = dilate_image(img)
+        elif effect == "开运算":
+            processed_img = open_image(img)
+        elif effect == "闭运算":
+            processed_img = close_image(img)
         elif effect == "1":
             processed_img = run_style_transfer(img,"../src/style_transfer/saved_models/candy.pth")
         elif effect == "2":
@@ -307,7 +401,31 @@ class ImageConverterApp(QMainWindow):
             )
         )
 
+        self.processed_resolution_label.setText(
+            f"分辨率：{pixmap.width()} × {pixmap.height()}"
+        )
+
         self.status_label.setText(f"已应用效果: {effect}")
+
+    def get_input_params1(self):
+        """
+        获取输入框的参数
+        """
+        try:
+            val1 = float(self.param1_input.text())
+            return val1
+        except ValueError:
+            return None
+
+    def get_input_params2(self):
+        """
+            获取输入框的参数
+        """
+        try:
+            val2 = float(self.param2_input.text())
+            return val2
+        except ValueError:
+            return None
 
     def save_image(self):
         """保存处理后的图片"""
@@ -321,6 +439,7 @@ class ImageConverterApp(QMainWindow):
             "PNG图片 (*.png);;JPEG图片 (*.jpg *.jpeg);;位图 (*.bmp)",
             options=options
         )
+
 
         if file_path:
             if self.processed_image.save(file_path):
