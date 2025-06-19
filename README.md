@@ -26,6 +26,3 @@ src/basic/
 ├── geometry.py        # 几何变换（旋转、缩放等）
 └── edge_detection.py  # 边缘检测（Canny、Sobel等）
 
-椒 盐 噪声、
-
-图像开运算、图像闭运算、腐蚀、膨胀、

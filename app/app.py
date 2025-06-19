@@ -1,7 +1,7 @@
 import os
 import sys
 
-from PyQt5.QtCore import Qt,QThread, pyqtSignal
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import (
     QApplication,
@@ -18,7 +18,6 @@ from PyQt5.QtWidgets import (
     QDesktopWidget,
     QLineEdit,
 )
-from fontTools.ttx import process
 
 # 导入图像处理模块
 from src.basic.binarize import *
@@ -53,6 +52,7 @@ class ImageConverterApp(QMainWindow):
 
     def initUI(self, control_layout=None):
         """初始化用户界面"""
+
         # 定义效果选项字典，包含各种图像处理类别及其子选项
         self.effect_options = {
             "原始图片":["原始图片"],
@@ -88,7 +88,7 @@ class ImageConverterApp(QMainWindow):
             ],
             "椒盐噪声":["添加椒盐噪声"],
             "图像形态学操作":["腐蚀","膨胀","开运算","闭运算"],
-            "风格迁移": ["糖果", "马赛克", "雨中公主", "Udine","test"],
+            "风格迁移": ["糖果", "马赛克", "雨中公主", "Udine","our_trained"],
             "像素凤转换":["pixel","retro","manga","cartoon","realistic"],
         }
 
@@ -395,7 +395,7 @@ class ImageConverterApp(QMainWindow):
         elif effect == "Udine":
             processed_img = run_style_transfer(img, "../src/style_transfer/models/udnie.pth")
         elif effect == "test":
-            processed_img = run_style_transfer(img, "../src/style_transfer/models/self-trained.model")
+            processed_img = run_style_transfer(img, "../src/style_transfer/models/our_trained.model")
         elif effect in PIXEL_STYLE_PRESETS:
             params = PIXEL_STYLE_PRESETS[effect]
             processed_img = convert_to_pixel(img, **params)
