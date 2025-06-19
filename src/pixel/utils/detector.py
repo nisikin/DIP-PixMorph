@@ -53,7 +53,7 @@ class EdgeDetectorModule(nn.Module):
 
 def test():
     # 读取图像并转换为张量 [1, 3, H, W]
-    rgb = np.array(Image.open("../test.jpg").convert("RGB")).astype(np.float32)
+    rgb = np.array(Image.open("../../../assets/test.jpg").convert("RGB")).astype(np.float32)
     rgb = torch.from_numpy(rgb).permute([2, 0, 1]).unsqueeze(dim=0)
 
     # 初始化边缘检测模型并运行

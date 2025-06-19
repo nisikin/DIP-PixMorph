@@ -76,7 +76,7 @@ class PixelEffectModule(nn.Module):
         return result_rgb
 
 def test1():
-    img = Image.open("../test.jpg").convert("RGB")
+    img = Image.open("../../../assets/test.jpg").convert("RGB")
     img_np = np.array(img).astype(np.float32)
     img_np = np.transpose(img_np, axes=[2, 0, 1])[np.newaxis, :, :, :]  # [1, 3, H, W]
     img_pt = torch.from_numpy(img_np)

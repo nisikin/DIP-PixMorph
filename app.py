@@ -89,7 +89,7 @@ class ImageConverterApp(QMainWindow):
             "椒盐噪声":["添加椒盐噪声"],
             "图像形态学操作":["腐蚀","膨胀","开运算","闭运算"],
             "风格迁移": ["糖果", "马赛克", "雨中公主", "Udine","our_trained"],
-            "像素凤转换":["pixel","retro","manga","cartoon","realistic"],
+            "像素凤转换":["pixel","retro","manga","cartoon","realistic","vintage","sketch","blocky","anime","soft","noir"],
         }
 
         # 创建主窗口部件
@@ -262,11 +262,17 @@ class ImageConverterApp(QMainWindow):
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
         PIXEL_STYLE_PRESETS = {
-            "pixel": {"kernel_size": 10, "pixel_size": 16, "edge_thresh": 100},
+            "pixel": {"kernel_size": 10, "pixel_size": 10, "edge_thresh": 100},
             "retro": {"kernel_size": 8, "pixel_size": 24, "edge_thresh": 80},
             "manga": {"kernel_size": 5, "pixel_size": 12, "edge_thresh": 60},
             "cartoon": {"kernel_size": 12, "pixel_size": 20, "edge_thresh": 100},
-            "realistic": {"kernel_size": 2, "pixel_size": 10, "edge_thresh": 50}
+            "realistic": {"kernel_size": 2, "pixel_size": 10, "edge_thresh": 50},
+            "vintage": {"kernel_size": 6, "pixel_size": 18, "edge_thresh": 70},
+            "sketch": {"kernel_size": 3, "pixel_size": 8, "edge_thresh": 120},
+            "blocky": {"kernel_size": 15, "pixel_size": 30, "edge_thresh": 90},
+            "anime": {"kernel_size": 4, "pixel_size": 14, "edge_thresh": 130},
+            "soft": {"kernel_size": 20, "pixel_size": 16, "edge_thresh": 40},
+            "noir": {"kernel_size": 5, "pixel_size": 12, "edge_thresh": 150}
         }
 
         # 应用选定的效果
@@ -387,15 +393,15 @@ class ImageConverterApp(QMainWindow):
         elif effect == "闭运算":
             processed_img = close_image(img)
         elif effect == "糖果":
-            processed_img = run_style_transfer(img, "../src/style_transfer/models/candy.pth")
+            processed_img = run_style_transfer(img, "src/style_transfer/models/candy.pth")
         elif effect == "马赛克":
-            processed_img = run_style_transfer(img, "../src/style_transfer/models/mosaic.pth")
+            processed_img = run_style_transfer(img, "src/style_transfer/models/mosaic.pth")
         elif effect == "雨中公主":
-            processed_img = run_style_transfer(img, "../src/style_transfer/models/rain_princess.pth")
+            processed_img = run_style_transfer(img, "src/style_transfer/models/rain_princess.pth")
         elif effect == "Udine":
-            processed_img = run_style_transfer(img, "../src/style_transfer/models/udnie.pth")
-        elif effect == "test":
-            processed_img = run_style_transfer(img, "../src/style_transfer/models/our_trained.model")
+            processed_img = run_style_transfer(img, "src/style_transfer/models/udnie.pth")
+        elif effect == "our_trained":
+            processed_img = run_style_transfer(img, "src/style_transfer/models/our_trained.model")
         elif effect in PIXEL_STYLE_PRESETS:
             params = PIXEL_STYLE_PRESETS[effect]
             processed_img = convert_to_pixel(img, **params)

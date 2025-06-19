@@ -31,7 +31,7 @@ class Photo2PixelModel(nn.Module):
 
 
 def test1():
-    img = Image.open("../test.jpg").convert("RGB")  # 打开图像
+    img = Image.open("../../../assets/test.jpg").convert("RGB")  # 打开图像
     img_np = np.array(img).astype(np.float32)                                # 转为NumPy数组
     img_np = np.transpose(img_np, axes=[2, 0, 1])[np.newaxis, :, :, :]       # 转为 [1, 3, H, W]
     img_pt = torch.from_numpy(img_np)                                        # 转为PyTorch张量
