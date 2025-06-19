@@ -18,6 +18,8 @@ from PyQt5.QtWidgets import (
     QDesktopWidget,
     QLineEdit,
 )
+from fontTools.ttx import process
+
 # 导入图像处理模块
 from src.basic.binarize import *
 from src.basic.edge_detection import *
@@ -47,6 +49,7 @@ class ImageConverterApp(QMainWindow):
         x = (screen.width() - width) // 2
         y = (screen.height() - height) // 2
         self.setGeometry(x, y, width, height)
+
 
     def initUI(self, control_layout=None):
         """初始化用户界面"""
@@ -86,7 +89,7 @@ class ImageConverterApp(QMainWindow):
             "椒盐噪声":["添加椒盐噪声"],
             "图像形态学操作":["腐蚀","膨胀","开运算","闭运算"],
             "风格迁移": ["糖果", "马赛克", "雨中公主", "Udine","test"],
-            "像素凤转换":["pixel"],
+            "像素凤转换":["pixel","retro","manga","cartoon","realistic"],
         }
 
         # 创建主窗口部件
@@ -230,17 +233,15 @@ class ImageConverterApp(QMainWindow):
             self.original_image = QImage(file_path)
             if not self.original_image.isNull():
                 pixmap = QPixmap.fromImage(self.original_image)
-                self.original_label.setPixmap(
-                    pixmap.scaled(
-                        self.original_label.width(),
-                        self.original_label.height(),
-                        Qt.KeepAspectRatio,
-                        Qt.SmoothTransformation
-                    )
+                scaled_pixmap = pixmap.scaled(
+                    self.original_label.width(),
+                    self.original_label.height(),
+                    Qt.KeepAspectRatio,
+                    Qt.SmoothTransformation
                 )
+                self.original_label.setPixmap(scaled_pixmap)
                 self.processed_label.clear()
                 self.processed_label.setText("选择效果后点击应用按钮")
-                self.original_label.setPixmap(pixmap)
                 self.original_resolution_label.setText(f"分辨率：{pixmap.width()} × {pixmap.height()}")
             else:
                 QMessageBox.warning(self, "错误", "无法加载图片文件")
@@ -259,6 +260,14 @@ class ImageConverterApp(QMainWindow):
         # 将QImage转换为numpy数组进行处理
         img = self.qimage_to_numpy(self.original_image)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+        PIXEL_STYLE_PRESETS = {
+            "pixel": {"kernel_size": 10, "pixel_size": 16, "edge_thresh": 100},
+            "retro": {"kernel_size": 8, "pixel_size": 24, "edge_thresh": 80},
+            "manga": {"kernel_size": 5, "pixel_size": 12, "edge_thresh": 60},
+            "cartoon": {"kernel_size": 12, "pixel_size": 20, "edge_thresh": 100},
+            "realistic": {"kernel_size": 2, "pixel_size": 10, "edge_thresh": 50}
+        }
 
         # 应用选定的效果
         if effect == "原始图片":
@@ -386,9 +395,10 @@ class ImageConverterApp(QMainWindow):
         elif effect == "Udine":
             processed_img = run_style_transfer(img, "../src/style_transfer/models/udnie.pth")
         elif effect == "test":
-            processed_img = run_style_transfer(img,"../src/style_transfer/models/epoch_10_Sun_Jun_15_17:07:18_2025_100000.0_10000000000.0.model")
-        elif effect == "pixel":
-            processed_img = convert_to_pixel(img)
+            processed_img = run_style_transfer(img, "../src/style_transfer/models/self-trained.model")
+        elif effect in PIXEL_STYLE_PRESETS:
+            params = PIXEL_STYLE_PRESETS[effect]
+            processed_img = convert_to_pixel(img, **params)
         else:
             processed_img = img
 
