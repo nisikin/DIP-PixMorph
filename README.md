@@ -1,28 +1,100 @@
-# image-processing-project
+# DIP‑PixMorph 🎨
 
-# 期末大作业要求
+A digital image processing toolkit with traditional filters, neural style transfer, and pixel art effects. 
+一个集传统滤波器、神经风格迁移与像素艺术效果于一体的数字图像处理工具包
+##  Features
 
-## 三种难度：
-1. 学期末交付一套完整的图像处理系统或APP，实现数字图像处理的主要功能（难度系数1—基本要求）
+- 基本图像处理：滤波、阈值、变换、边缘检测等
+    
+- **风格迁移**（Style Transfer）：支持多种预训练模型，如 Candy、Mosaic、Udnie、Rain Princess、自训练模型
+    
+- **像素艺术生成**：多种预设风格（pixel、retro、manga、cartoon、realistic 等），可用于生成**拼豆图纸**或低像素风格图像。
+    
 
-2. 在任务1的基础上，实现以下功能之一（难度系数1.3）：1）图像风格迁移；2）图像动作驱动；3）目标分割、定位、跟踪……；4）年龄转换；5）文本-图像转换……
+---
 
-3. 在任务1的基础上，增加实际应用，要求场景明确：如电路板缺陷检测、AI病历系统至少2个功能……（难度系数1.5）。
+## 🛠️ 安装与依赖
 
-“交付一套完整的图像处理系统或APP”，有同学问是否需要做前端。—— 需要的，但是只要前端的可用性没问题就可以，美观等因素不作为核心评分标准。
-能否使用别人训练好的模型。 —— 如果是参数非常多的模型是可以的；如果是小模型，条件允许的话，建议还是自己训练一下。
+```bash
+git clone https://github.com/nisikin/DIP-PixMorph.git
+cd DIP-PixMorph
+python3 -m venv venv
+source venv/bin/activate   # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-对于期末项目的要求的3点，应该是有三种：只做1（难度系数1）、做1 + 2（难度系数1.3）、做1 + 3（难度系数1.5）。
+确保你的 Python 是 3.8+，并且成功安装以下依赖：
 
-要求3的“至少2个功能“是指选定一个应用场景之后，在这个场景下实现至少两个功能。
+- torch, torchvision
+    
+- pillow, opencv-python
+    
+- numpy
+    
+- pyqt5（如果你使用 GUI ）
+    
 
-src/basic/
-├── __init__.py
-├── io.py              # 图像读取与保存
-├── grayscale.py       # 灰度化
-├── binarize.py        # 二值化
-├── filtering.py       # 平滑和锐化
-├── histogram.py       # 直方图均衡与可视化
-├── geometry.py        # 几何变换（旋转、缩放等）
-└── edge_detection.py  # 边缘检测（Canny、Sobel等）
+---
 
+## 🚀 使用
+
+### 命令行演示
+
+```bash
+python app.py
+```
+
+打开 PyQt GUI，选择图像、选择效果（如 “pixel”, “manga”, “retro”, “rain_princess” 等），点击“应用”，即可查看结果并保存。
+
+![[assets/GUI.png]]
+
+### 程序接口
+
+
+
+---
+
+## 🎨 Pixel Style 风格预设
+
+预设包括：
+
+```python
+PIXEL_STYLE_PRESETS = {
+  "pixel": {"kernel_size":10,"pixel_size":16,"edge_thresh":100},
+  "retro": {"kernel_size":8,"pixel_size":24,"edge_thresh":80},
+  "manga": {"kernel_size":5,"pixel_size":12,"edge_thresh":60},
+  "cartoon":{"kernel_size":12,"pixel_size":20,"edge_thresh":100},
+  "realistic":{"kernel_size":2,"pixel_size":10,"edge_thresh":50},
+  "vintage":{"kernel_size":6,"pixel_size":18,"edge_thresh":70},
+  "sketch":{"kernel_size":3,"pixel_size":8,"edge_thresh":120},
+  "blocky":{"kernel_size":15,"pixel_size":30,"edge_thresh":90},
+  "anime":{"kernel_size":4,"pixel_size":14,"edge_thresh":130},
+  "soft":{"kernel_size":20,"pixel_size":16,"edge_thresh":40},
+  "noir":{"kernel_size":5,"pixel_size":12,"edge_thresh":150},
+}
+```
+
+在 GUI 下拉框中选择这些效果，就会自动应用对应参数。
+
+
+---
+
+## 📚 参考资料
+
+- 类似项目参考：    
+
+
+---
+
+## ✅ 贡献方式
+
+欢迎你提交 Pull Request、报告 Issue，或加入讨论优化功能！建议分支为 `feature/xxx`，合并前需通过 CI 或 local 测试。
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+详见本仓库自带 `LICENSE` 文件。
+
+---
