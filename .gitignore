@@ -1,0 +1,13 @@
+.idea/
+__pycache__/
+.venv/
+.DS_Store
+*.log
+*.png
+*.jpg
+*.jpeg
+*.bmp
+*.tif
+*.pth
+*.pt
+*.onnx
