@@ -1,7 +1,8 @@
-# DIP‑PixMorph 🎨
+# DIP‑PixMorph
 
-A digital image processing toolkit with traditional filters, neural style transfer, and pixel art effects. 
-一个集传统滤波器、神经风格迁移与像素艺术效果于一体的数字图像处理工具包
+A comprehensive digital image processing toolkit with neural style transfer and multiple pixel art effect presets.<br>
+一个集丰富且完善的传统数字图像处理功能（包括滤波、阈值处理、边缘检测、形态学操作、几何变换、直方图处理及噪声添加）与神经风格迁移、多种像素艺术风格预设于一体的综合工具包。
+
 ##  Features
 
 - 基本图像处理：滤波、阈值、变换、边缘检测等
@@ -12,7 +13,26 @@ A digital image processing toolkit with traditional filters, neural style transf
     
 
 ---
-
+## 📦 项目结构
+```
+DIP-PixMorph/
+├── assets/                  # 静态资源
+├── src/                     # 源代码
+│   ├── basic/               # 基础图像处理
+│   ├── pixel/               # 像素风格转换
+│   │   ├──utils/            # 像素模块的工具及模组
+│   │   └──convert.py        # 像素风格转换核心代码
+│   └── style_transfer/      # 艺术风格迁移
+│       ├──models            # 预训练模型文件
+│       ├──netural_style     # 神经风格迁移核心实现代码
+│       └──scripts           # 训练和推理辅助脚本
+├── test/                    # 测试套件
+├── .gitignore               # Git忽略配置
+├── app.py                   # 主程序入口
+├── LICENSE                  # 许可证文件
+├── README.md                # 项目说明文档
+└── requirements.txt         # 依赖包列表
+```
 ## 🛠️ 安装与依赖
 
 ```bash
@@ -25,14 +45,13 @@ pip install -r requirements.txt
 
 确保你的 Python 是 3.8+，并且成功安装以下依赖：
 
-- torch, torchvision
-    
-- pillow, opencv-python
-    
-- numpy
-    
-- pyqt5（如果你使用 GUI ）
-    
+- torch, torchvision（用于神经风格迁移与模型推理）
+
+- Pillow, opencv-python（图像处理基础）
+
+- numpy, scipy（矩阵运算与图像变换）
+
+- PyQt5（仅在使用图形界面 GUI 时需要）
 
 ---
 
@@ -46,15 +65,26 @@ python app.py
 
 打开 PyQt GUI，选择图像、选择效果（如 “pixel”, “manga”, “retro”, “rain_princess” 等），点击“应用”，即可查看结果并保存。
 
-![GUI界面示意图](assets/GUI.jpg)
+![GUI界面示意图](assets/readme/GUI.jpg)
 
 ### 程序接口
 
+---
+## 🖼️ 风格迁移
+本项目集成了 Torch 实现的神经风格迁移，可一键将照片转换为特定画风。预设模型如下：
 
+| 模型名称            | 风格示意图       |
+| --------------- | ----------- |
+| `Candy`         | 糖果般的明亮斑斓风格  |
+| `Mosaic`        | 色块拼接感强的现代风格 |
+| `Udnie`         | 抽象表现主义风格    |
+| `Rain Princess` | 雨中夜景般的浪漫油画风 |
+| `Your Model`    | 支持训练自定义风格模型 |
+
+使用方式：在 GUI 中选择对应风格，点击“应用”即可预览与保存转换结果。
 
 ---
-
-## 🎨 Pixel Style 风格预设
+## 🎨 Pixel Style 
 
 预设包括：
 
@@ -82,13 +112,6 @@ PIXEL_STYLE_PRESETS = {
 ## 📚 参考资料
 
 - 类似项目参考：    
-
-
----
-
-## ✅ 贡献方式
-
-欢迎你提交 Pull Request、报告 Issue，或加入讨论优化功能！建议分支为 `feature/xxx`，合并前需通过 CI 或 local 测试。
 
 ---
 

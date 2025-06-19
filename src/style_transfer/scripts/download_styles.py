@@ -41,7 +41,7 @@ def download_wallpapers(keyword="disco elysium", save_dir="../data/style-images2
 
                 time.sleep(delay)
 
-    print(f"\n✨ 下载完成，共保存了 {img_count} 张壁纸到 {save_dir}")
+    print(f"\n 下载完成，共保存了 {img_count} 张壁纸到 {save_dir}")
 
 if __name__ == "__main__":
     download_wallpapers()
