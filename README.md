@@ -46,7 +46,7 @@ python app.py
 
 打开 PyQt GUI，选择图像、选择效果（如 “pixel”, “manga”, “retro”, “rain_princess” 等），点击“应用”，即可查看结果并保存。
 
-![[assets/GUI.png]]
+![[assets/GUI.jpg]]
 
 ### 程序接口
 
