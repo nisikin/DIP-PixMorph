@@ -29,7 +29,8 @@ from src.basic.histogram import *
 from src.basic.salt_pepper_noise import *
 from src.basic.morph_ops import *
 
-from src.style_transfer.neural_style.run import *
+from src.style_transfer.neural_style import *
+from src.style_transfer.scripts.run import *
 from src.pixel.convert import *
 
 class ImageConverterApp(QMainWindow):
@@ -89,7 +90,7 @@ class ImageConverterApp(QMainWindow):
             "椒盐噪声":["添加椒盐噪声"],
             "图像形态学操作":["腐蚀","膨胀","开运算","闭运算"],
             "风格迁移": ["糖果", "马赛克", "雨中公主", "Udine","our_trained"],
-            "像素凤转换":["pixel","retro","manga","cartoon","realistic","vintage","sketch","blocky","anime","soft","noir"],
+            "像素风转换":["pixel","retro","manga","cartoon","realistic","vintage","sketch","blocky","anime","soft","noir"],
         }
 
         # 创建主窗口部件

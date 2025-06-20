@@ -1,6 +1,5 @@
-from src.style_transfer.neural_style.run import run_style_transfer
+from src.style_transfer.scripts.run import run_style_transfer
 from PIL import Image
-import os
 
 if __name__ == "__main__":
     # 1. 读取图像

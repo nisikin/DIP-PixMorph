@@ -1,4 +1,4 @@
-# DIP‑PixMorph
+#  DIP‑PixMorph
 
 A comprehensive digital image processing toolkit with neural style transfer and multiple pixel art effect presets.<br>
 一个集丰富且完善的传统数字图像处理功能（包括滤波、阈值处理、边缘检测、形态学操作、几何变换、直方图处理及噪声添加）与神经风格迁移、多种像素艺术风格预设于一体的综合工具包。
@@ -89,19 +89,7 @@ python app.py
 预设包括：
 
 ```python
-PIXEL_STYLE_PRESETS = {
-  "pixel": {"kernel_size":10,"pixel_size":16,"edge_thresh":100},
-  "retro": {"kernel_size":8,"pixel_size":24,"edge_thresh":80},
-  "manga": {"kernel_size":5,"pixel_size":12,"edge_thresh":60},
-  "cartoon":{"kernel_size":12,"pixel_size":20,"edge_thresh":100},
-  "realistic":{"kernel_size":2,"pixel_size":10,"edge_thresh":50},
-  "vintage":{"kernel_size":6,"pixel_size":18,"edge_thresh":70},
-  "sketch":{"kernel_size":3,"pixel_size":8,"edge_thresh":120},
-  "blocky":{"kernel_size":15,"pixel_size":30,"edge_thresh":90},
-  "anime":{"kernel_size":4,"pixel_size":14,"edge_thresh":130},
-  "soft":{"kernel_size":20,"pixel_size":16,"edge_thresh":40},
-  "noir":{"kernel_size":5,"pixel_size":12,"edge_thresh":150},
-}
+
 ```
 
 在 GUI 下拉框中选择这些效果，就会自动应用对应参数。
@@ -111,13 +99,12 @@ PIXEL_STYLE_PRESETS = {
 
 ## 📚 参考资料
 
-- 类似项目参考：    
+- 类似项目参考：https://github.com/pytorch/examples/tree/main/fast_neural_style
 
 ---
 
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
-详见本仓库自带 `LICENSE` 文件。
 
 ---

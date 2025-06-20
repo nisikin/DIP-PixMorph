@@ -13,7 +13,7 @@ from src.basic.filtering import *
 from src.basic.geometry import *
 from src.basic.grayscale import *
 from src.basic.histogram import *
-from src.style_transfer.neural_style.run import *
+from src.style_transfer.scripts.run import *
 
 
 class ImageConverterApp(QMainWindow):

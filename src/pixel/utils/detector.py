@@ -59,7 +59,6 @@ def test():
     # 初始化边缘检测模型并运行
     net = EdgeDetectorModule()
     edge_mask = net(rgb, param_edge_thresh=128, param_edge_dilate=3)
-    print(edge_mask.shape)  # 输出边缘掩码形状
 
     # 保存边缘检测结果为图片
     edge_mask = 255 * edge_mask

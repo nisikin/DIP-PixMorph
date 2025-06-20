@@ -88,9 +88,6 @@ def test1():
         result_rgb_pt = model(img_pt, param_num_bins=4, param_kernel_size=11, param_pixel_size=16)
         result_rgb_pt = result_rgb_pt[0, ...].permute(1, 2, 0)  # [H, W, 3]
 
-    print("img_pt", img_pt.shape)
-    print("result_rgb_pt", result_rgb_pt.shape)
-
     result_rgb_np = result_rgb_pt.cpu().numpy().astype(np.uint8)
     Image.fromarray(result_rgb_np).save("./test_result_pixel_effect.png")
 

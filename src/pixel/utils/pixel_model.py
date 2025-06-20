@@ -43,9 +43,6 @@ def test1():
         result_rgb_pt = model(img_pt, param_kernel_size=11, param_pixel_size=16)
         result_rgb_pt = result_rgb_pt[0, ...].permute(1, 2, 0)  # 转为 [H, W, 3]
 
-    print("img_pt", img_pt.shape)
-    print("result_rgb_pt", result_rgb_pt.shape)
-
     # 保存输出图像
     result_rgb_np = result_rgb_pt.cpu().numpy().astype(np.uint8)
     Image.fromarray(result_rgb_np).save("./test_result_photo2pixel.png")

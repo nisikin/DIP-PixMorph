@@ -3,8 +3,8 @@
 import re
 import torch
 from torchvision import transforms
-from .transformer_net import TransformerNet
-from . import utils
+from src.style_transfer.neural_style.transformer_net import TransformerNet
+from src.style_transfer.neural_style import utils
 import numpy as np
 from PIL import Image
 

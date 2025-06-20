@@ -2,7 +2,7 @@ import torch
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
-from src.pixel.utils.pixel import Photo2PixelModel
+from src.pixel.utils.pixel_model import Photo2PixelModel
 from src.pixel.utils import basic
 
 
@@ -153,7 +153,7 @@ def convert_to_pixel(
 
 def test():
     # 测试图像路径
-    img_input = Image.open('../../assets/mylifewill.jpg')
+    img_input = Image.open('../../assets/test.jpg')
     output_path = './result.jpg'
 
     img_output = convert_to_pixel(
